@@ -39,6 +39,12 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   background-color: #f3f3f3;
   min-height: 100%;
 }
+@media screen and (max-width: 991px) {
+  #maincontent {
+    display: flex;
+    flex-direction: column;
+  }
+}
 #footer {
   background-color: #444;
   color: #aaa;
@@ -47,6 +53,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   padding: 25px;
   text-align: center;
   text-transform: uppercase;
+  box-sizing: border-box;
 }
 /* ====================== Navigation ====================== */
 nav {
@@ -233,11 +240,18 @@ nav h1 a {
 }
 .inside #map-container {
   background: blue none repeat scroll 0 0;
-  height: 87%;
+  height: 100%;
   position: fixed;
   right: 0;
   top: 80px;
   width: 50%;
+}
+@media screen and (max-width: 991px) {
+  .inside #map-container {
+    position: static;
+    height: 200px;
+    width: 100%;
+  }
 }
 .inside #map {
   background-color: #ccc;
@@ -283,9 +297,16 @@ nav h1 a {
   border-top: 1px solid #fff;
   padding: 140px 40px 30px;
   width: 50%;
+  box-sizing: border-box;
+}
+@media screen and (max-width: 991px) {
+  #restaurant-container, #reviews-container {
+    width: 100%;
+  }
 }
 #reviews-container {
   padding: 30px 40px 80px;
+  box-sizing: border-box;
 }
 #reviews-container h2 {
   color: #f58500;
@@ -305,9 +326,8 @@ nav h1 a {
   list-style-type: none;
   margin: 0 0 30px;
   overflow: hidden;
-  padding: 0 20px 20px;
+  padding: 10px 20px 20px;
   position: relative;
-  width: 85%;
 }
 #reviews-list li p {
   margin: 0 0 10px;
