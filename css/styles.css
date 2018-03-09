@@ -181,7 +181,8 @@ nav h1 a {
 @media screen and (max-width: 1200px) {
   #restaurants-list li {
     margin: 5px;
-    width: calc((100% - 150px) / 2)
+    width: calc((100% - 150px) / 2);
+    min-height: auto;
   }
 }
 @media screen and (max-width: 767px) {
@@ -207,6 +208,12 @@ nav h1 a {
 @media screen and (max-width: 1200px) {
   #restaurants-list .restaurant-img {
     min-height: auto;
+    margin: -15% 0;
+  }
+}
+@media screen and (max-width: 767px) {
+  #restaurants-list .restaurant-img {
+    margin: -25% 0;
   }
 }
 #restaurants-list li h1 {
@@ -288,13 +295,13 @@ nav h1 a {
 #restaurant-img {
 	width: 90%;
 }
+.restaurant-img-container {
+  overflow: hidden;
+}
 @media (max-width: 991px) {
   #restaurant-img {
     width: 100%;
     margin: -24% 0;
-  }
-  .restaurant-img-container {
-    overflow: hidden;
   }
 }
 #restaurant-address {
