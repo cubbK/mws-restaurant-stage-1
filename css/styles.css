@@ -257,7 +257,7 @@ nav h1 a {
     height: 200px;
     width: 100%;
     order: 1;
-    margin-bottom: 80px;
+    margin-bottom: 65px;
   }
 }
 .inside #map {
@@ -269,6 +269,11 @@ nav h1 a {
   bottom: 0;
   position: absolute;
   width: 50%;
+}
+@media screen and (max-width: 991px) {
+  .inside #footer {
+    width: 100%;
+  }
 }
 #restaurant-name {
   color: #f18200;
@@ -286,7 +291,7 @@ nav h1 a {
 @media (max-width: 991px) {
   #restaurant-img {
     width: 100%;
-    margin: -200px 0;
+    margin: -24% 0;
   }
   .restaurant-img-container {
     overflow: hidden;
@@ -325,9 +330,24 @@ nav h1 a {
     width: 100%;
   }
 }
+@media screen and (max-width: 480px) {
+  #restaurant-container, #reviews-container {
+    padding: 140px 15px 30px;
+  }
+}
 #reviews-container {
   padding: 30px 40px 80px;
   box-sizing: border-box;
+}
+@media screen and (max-width: 991px) {
+  #reviews-container {
+    padding: 30px 40px 40px;
+  }
+}
+@media screen and (max-width: 480px) {
+  #reviews-container {
+    padding: 30px 15px 30px;
+  }
 }
 #reviews-container h2 {
   color: #f58500;
