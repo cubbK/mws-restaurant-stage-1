@@ -18,11 +18,12 @@
     },
     "homepage": "https://github.com/cubbK/mws-restaurant-stage-1#readme",
     "dependencies": {
-        "concurrent-transform": "^1.0.0",
-        "gulp": "^3.9.1",
-        "gulp-image-resize": "^0.13.0"
+        
     },
     "devDependencies": {
-        "gulp-gm": "0.0.8"
+        "gulp-gm": "0.0.8",
+        "imagemin": "^5.3.1",
+        "gulp-imagemin": "^4.1.0",
+        "gulp": "^3.9.1"
     }
 }

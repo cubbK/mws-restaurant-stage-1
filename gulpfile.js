@@ -1,13 +1,25 @@
 // GraphicsMagick required to run this script
 
 const gulp = require('gulp');
-var gm = require('gulp-gm');
-var parallel = require('concurrent-transform');
+const gm = require('gulp-gm');
+const imagemin = require('gulp-imagemin');
 
-gulp.task('default', function () {
+gulp.task('image-resize-small', function () {
   return gulp.src('./img/*.jpg')
     .pipe(gm(function (gmfile) {
-      return gmfile.resize(100, 100);
+      return gmfile.resize(300);
     }))
+    .pipe(imagemin())
     .pipe(gulp.dest('./img/small/'));
 });
+
+gulp.task('image-resize-medium', () => 
+  gulp.src('./img/*.jpg')
+  .pipe(gm(function (gmfile) {
+    return gmfile.resize(500);
+  }))
+  .pipe(imagemin())
+  .pipe(gulp.dest('./img/medium/'))
+)
+
+gulp.task('default', ['image-resize-small', 'image-resize-medium'])
