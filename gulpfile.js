@@ -1,14 +1,13 @@
-// ImageMagick required to run this script
-// https://www.imagemagick.org/script/index.php
+// GraphicsMagick required to run this script
 
 const gulp = require('gulp');
-const imageResize = require('gulp-image-resize');
+var gm = require('gulp-gm');
 var parallel = require('concurrent-transform');
 
-gulp.task('resizeImages', function () {
-  return gulp.src('./img/1.jpg')
-    .pipe(parallel(
-      imageResize({ width : 300 })
-    ))
+gulp.task('default', function () {
+  return gulp.src('./img/*.jpg')
+    .pipe(gm(function (gmfile) {
+      return gmfile.resize(100, 100);
+    }))
     .pipe(gulp.dest('./img/small/'));
 });

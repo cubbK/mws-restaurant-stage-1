@@ -21,5 +21,8 @@
         "concurrent-transform": "^1.0.0",
         "gulp": "^3.9.1",
         "gulp-image-resize": "^0.13.0"
+    },
+    "devDependencies": {
+        "gulp-gm": "0.0.8"
     }
 }
