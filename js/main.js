@@ -152,13 +152,14 @@ createRestaurantHTML = (restaurant) => {
     ${imageSrcSmall} 300w,
     ${imageSrcMedium} 500w,
     ${imageSrcBig} 800w,
-  `
+  `;
   image.sizes = `
     (max-width: 1200px) 40%,
     (max-width: 767px) 80%,
     (max-width: 480px) 95%,
     270px
-  `
+  `;
+  image.alt = `${restaurant.name} restaurant`
   imageContainer.append(image);
   li.append(imageContainer);
 
