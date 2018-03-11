@@ -186,8 +186,8 @@ nav h1 a {
   }
 }
 @media screen and (max-width: 767px) {
-  #restaurants-list li {
-    width: auto;
+  #restaurants-list li {  
+    width: 100%;
     min-height: auto;
   }
 }
