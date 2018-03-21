@@ -216,7 +216,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
     margin: -25% 0;
   }
 }
-#restaurants-list li h1 {
+#restaurants-list li h2 {
   color: #6b6b6b;
   font-family: Arial,sans-serif;
   font-size: 14pt;
