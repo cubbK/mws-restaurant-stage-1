@@ -205,15 +205,10 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   min-height: 248px;
   min-width: 100%;
 }
-@media screen and (max-width: 1200px) {
+@media (max-width: 1200px) {
   #restaurants-list .restaurant-img {
     min-height: auto;
-    margin: -15% 0;
-  }
-}
-@media screen and (max-width: 767px) {
-  #restaurants-list .restaurant-img {
-    margin: -25% 0;
+    height: auto;
   }
 }
 #restaurants-list li h2 {

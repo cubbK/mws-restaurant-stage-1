@@ -149,14 +149,13 @@ createRestaurantHTML = (restaurant) => {
   image.className = 'restaurant-img';
   image.src = imageSrcBig;
   image.srcset = `
-    ${imageSrcSmall} 300w,
-    ${imageSrcMedium} 500w,
+    ${imageSrcSmall} 150w,
+    ${imageSrcMedium} 300w,
     ${imageSrcBig} 800w,
   `;
   image.sizes = `
-    (max-width: 1200px) 40%,
-    (max-width: 767px) 80%,
-    (max-width: 480px) 95%,
+    (max-width: 1200px) 50%,
+    (max-width: 767px) 100%,
     270px
   `;
   image.alt = `${restaurant.name} restaurant`
