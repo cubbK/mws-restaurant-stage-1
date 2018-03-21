@@ -296,7 +296,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 @media (max-width: 991px) {
   #restaurant-img {
     width: 100%;
-    margin: -24% 0;
+    height: auto;
   }
 }
 #restaurant-address {
