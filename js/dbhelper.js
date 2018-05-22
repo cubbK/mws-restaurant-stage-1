@@ -12,10 +12,24 @@ class DBHelper {
     return `http://localhost:${port}/restaurants`;
   }
 
+  static _fetchRestaurantsFromIndexedDB () {
+    var request = window.indexedDB.open("restaurants-reviews", 1);
+    request.onerror = function(event) {
+      // Do something with request.errorCode!
+      console.log('fetchRestaurantsFromIndexedDB error', event)
+    };
+    request.onsuccess = function(event) {
+      // Do something with request.result!
+      var db = event.target.result
+      var objectStore = db.createObjectStore("restaurants", { keyPath: "ssn" });
+    };
+  }
+
   /**
    * Fetch all restaurants.
    */
-  static fetchRestaurants(callback) {
+  static async fetchRestaurants(callback) {
+    this._fetchRestaurantsFromIndexedDB()
     let xhr = new XMLHttpRequest();
     xhr.open('GET', DBHelper.DATABASE_URL);
     xhr.onload = () => {
