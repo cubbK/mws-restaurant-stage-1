@@ -17,9 +17,7 @@
         "url": "https://github.com/cubbK/mws-restaurant-stage-1/issues"
     },
     "homepage": "https://github.com/cubbK/mws-restaurant-stage-1#readme",
-    "dependencies": {
-        
-    },
+    "dependencies": {},
     "devDependencies": {
         "gulp-gm": "0.0.8",
         "imagemin": "^5.3.1",
