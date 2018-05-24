@@ -5,14 +5,14 @@ request.onerror = function(event) {
 };
 request.onsuccess = function(event) {
   db = event.target.result;
-  console.log(db)
+  db.onerror = function(event) {
+    // Generic error handler for all errors targeted at this database's
+    // requests!
+    alert("Database error: " + event.target.errorCode);
+  };
 };
 
-db.onerror = function(event) {
-  // Generic error handler for all errors targeted at this database's
-  // requests!
-  alert("Database error: " + event.target.errorCode);
-};
+
 
 if('serviceWorker' in navigator) {
   navigator.serviceWorker
@@ -39,6 +39,7 @@ self.addEventListener('fetch', event => {
   event.respondWith(async function() {
     // Try to get the response from a cache.
     const cachedResponse = await caches.match(event.request);
+    console.log(event)
     // Return it if we found one.
     if (cachedResponse) return cachedResponse;
     // If we didn't find a match in the cache, use the network.
