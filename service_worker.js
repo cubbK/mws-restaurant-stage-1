@@ -22,17 +22,18 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('activate', event => {
-  var db;
-  var request = indexedDB.open("RestaurantsDB");
-  request.onerror = function (event) {
-    alert("Why didn't you allow my web app to use IndexedDB?!");
-  };
-  request.onsuccess = function (event) {
-    db = event.target.result;
-    console.log(123)
-  };
   //
   // Define your database
   //
+  var db;
+  var request = indexedDB.open("RestaurantsDB");
+  request.onerror = function (event) {
+    console.log('error creating db', event.error)
+  };
+  request.onsuccess = function (event) {
+    db = event.target.result;
+    console.log("Successfuly created the db")
+  };
+
 
 })
