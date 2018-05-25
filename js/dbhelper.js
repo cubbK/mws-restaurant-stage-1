@@ -13,7 +13,7 @@ class DBHelper {
   }
 
   static _fetchRestaurantsFromIndexedDB () {
-    var request = window.indexedDB.open("restaurants-reviews", 1);
+    var request = window.indexedDB.open("RestaurantDB", 1);
     request.onerror = function(event) {
       // Do something with request.errorCode!
       console.log('fetchRestaurantsFromIndexedDB error', event)
@@ -29,7 +29,7 @@ class DBHelper {
    * Fetch all restaurants.
    */
   static async fetchRestaurants(callback) {
-    this._fetchRestaurantsFromIndexedDB()
+    
     let xhr = new XMLHttpRequest();
     xhr.open('GET', DBHelper.DATABASE_URL);
     xhr.onload = () => {
