@@ -5,17 +5,34 @@ if ('serviceWorker' in navigator) {
 }
 
 self.addEventListener('fetch', event => {
+
   // Prevent the default, and handle the request ourselves.
   event.respondWith(async function () {
+    const url = new URL(event.request.url);
+
+    // serve the cat SVG from the cache if the request is
+    // same-origin and the path is '/dog.svg'
+    // if (url.pathname === '/dog.svg') {
+    //   event.respondWith(caches.match('/cat.svg'));
+    // }
+    console.log('url pathname', url.pathname)
+    //
     // Try to get the response from a cache.
+    //
     const cachedResponse = await caches.match(event.request);
-    console.log(event)
+    console.log('cahced response', cachedResponse)
+    console.log(event.request)
+    //
     // Return it if we found one.
+    //
     if (cachedResponse) return cachedResponse;
+    //
     // If we didn't find a match in the cache, use the network.
+    //
     const cache = await caches.open('v1');
-    cache.put(event.request, response.clone());
     const fetchedResource = await fetch(event.request);
+    cache.put(event.request, fetchedResource.clone());
+    
     return fetchedResource
 
   }());
@@ -34,6 +51,4 @@ self.addEventListener('activate', event => {
     db = event.target.result;
     console.log("Successfuly created the db")
   };
-
-
 })
