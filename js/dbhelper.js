@@ -12,32 +12,10 @@ class DBHelper {
     return `http://localhost:${port}/restaurants`;
   }
 
-  static _fetchRestaurantsFromIndexedDB() {
-    console.log(123)
-    const DBOpenRequest = indexedDB.open("RestaurantsDB", 1);
-    DBOpenRequest.onsuccess = async event => {
-
-      var db = event.target.result;
-
-      const fetchedRestaurants = await fetch(DBHelper.DATABASE_URL);
-      const fetchedRestaurantsJson = await fetchedRestaurants.json();
-      if(fetchedRestaurantsJson.length > 0) {
-        console.log('returning fetched restaurants')
-        return fetchedRestaurantsJson
-      }
-      //
-      // create an object store on the transaction
-      //
-      var objectStore = db.transaction('restaurants', 'readwrite').objectStore("restaurants");
-      fetchedRestaurantsJson.map(restaurant => objectStore.put(restaurant))
-    }
-  }
-
   /**
    * Fetch all restaurants.
    */
   static async fetchRestaurants(callback) {
-    this._fetchRestaurantsFromIndexedDB()
     let xhr = new XMLHttpRequest();
     xhr.open('GET', DBHelper.DATABASE_URL);
     xhr.onload = () => {
