@@ -12,24 +12,32 @@ class DBHelper {
     return `http://localhost:${port}/restaurants`;
   }
 
-  static _fetchRestaurantsFromIndexedDB () {
-    var request = window.indexedDB.open("RestaurantDB", 1);
-    request.onerror = function(event) {
-      // Do something with request.errorCode!
-      console.log('fetchRestaurantsFromIndexedDB error', event)
-    };
-    request.onsuccess = function(event) {
-      // Do something with request.result!
-      var db = event.target.result
-      var objectStore = db.createObjectStore("restaurants", { keyPath: "ssn" });
-    };
+  static _fetchRestaurantsFromIndexedDB() {
+    console.log(123)
+    const DBOpenRequest = indexedDB.open("RestaurantsDB", 1);
+    DBOpenRequest.onsuccess = async event => {
+
+      var db = event.target.result;
+
+      const fetchedRestaurants = await fetch(DBHelper.DATABASE_URL);
+      const fetchedRestaurantsJson = await fetchedRestaurants.json();
+      if(fetchedRestaurantsJson.length > 0) {
+        console.log('returning fetched restaurants')
+        return fetchedRestaurantsJson
+      }
+      //
+      // create an object store on the transaction
+      //
+      var objectStore = db.transaction('restaurants', 'readwrite').objectStore("restaurants");
+      fetchedRestaurantsJson.map(restaurant => objectStore.put(restaurant))
+    }
   }
 
   /**
    * Fetch all restaurants.
    */
   static async fetchRestaurants(callback) {
-    
+    this._fetchRestaurantsFromIndexedDB()
     let xhr = new XMLHttpRequest();
     xhr.open('GET', DBHelper.DATABASE_URL);
     xhr.onload = () => {
@@ -175,7 +183,8 @@ class DBHelper {
       title: restaurant.name,
       url: DBHelper.urlForRestaurant(restaurant),
       map: map,
-      animation: google.maps.Animation.DROP}
+      animation: google.maps.Animation.DROP
+    }
     );
     return marker;
   }

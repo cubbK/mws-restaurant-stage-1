@@ -7,11 +7,19 @@ if ('serviceWorker' in navigator) {
 self.addEventListener('fetch', event => {
 
   // Prevent the default, and handle the request ourselves.
-  event.respondWith(function () {
+  event.respondWith(async function () {
     const url = new URL(event.request.url);
 
     if (url.pathname === '/restaurants') {
-      return useIndexedDb(event);
+      const responseData = await useIndexedDb(event);
+      const responseJson = {
+        restaurants: responseData
+      }
+      console.log('creating blob')
+      const blob = new Blob([JSON.stringify(responseData, null, 2)], { type: 'application/json' })
+      const init = { "status" : 200 , "statusText" : "SuperSmashingGreat!" };
+      const response = new Response(blob, init);
+      return response
     } else {
       return useCache(event);
     }
@@ -27,10 +35,7 @@ self.addEventListener('activate', event => {
   request.onerror = function (event) {
     console.log('error creating db', event.error)
   };
-  request.onsuccess = function (event) {
-    db = event.target.result;
-    console.log("Successfuly created the db");
-  };
+
   request.onupgradeneeded = function (event) {
     db = event.target.result;
     var objectStore = db.createObjectStore("restaurants", { keyPath: "id" });
@@ -38,34 +43,20 @@ self.addEventListener('activate', event => {
 })
 
 async function useIndexedDb(fetchEvent) {
-  console.log('use indexedDb')
-  const fetchedRestaurants = await fetch(fetchEvent.request);
-  const items = await fetchedRestaurants.json();
+  return new Promise(resolve => {
+    const DBOpenRequest = indexedDB.open("RestaurantsDB", 1);
 
-  const DBOpenRequest = indexedDB.open("RestaurantsDB", 1);
-  DBOpenRequest.onsuccess = async event => {
+    DBOpenRequest.onsuccess = event => {
 
-    const db = event.target.result;
-
-    //
-    // create an object store on the transaction
-    //
-
-    console.log(123)
-   
-    var objectStore = db.transaction('restaurants', 'readwrite').objectStore("restaurants");
-    items.map(restaurant => objectStore.put(restaurant))        
-
-    objectStore.onsucces = async function () {
-      console.log('object store success')
+      var db = event.target.result;
+      var objectStore = db.transaction('restaurants', 'readwrite').objectStore("restaurants");
+      var restaurantsRequest = objectStore.getAll();
+      restaurantsRequest.onsuccess = function () {
+        resolve(restaurantsRequest.result);
+      }
     }
+  });
 
-    objectStore.onerror = function () {
-      console.log('err')
-    }
-
-  }
-  return await fetch(fetchEvent.request)
 }
 
 async function useCache(event) {
