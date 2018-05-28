@@ -1,6 +1,7 @@
 let restaurants,
   neighborhoods,
-  cuisines
+  cuisines,
+  lazyLoad
 var map
 var markers = []
 
@@ -10,7 +11,18 @@ var markers = []
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchNeighborhoods();
   fetchCuisines();
-  var myLazyLoad = new LazyLoad();
+  function logElementEvent(eventName, element) {
+    console.log(new Date().getTime(), eventName, element.getAttribute('data-src'));
+  }
+  /* Uncomment the callbacks in LazyLoad options to see the callbacks logs in your browser's console */
+  lazyLoad = new LazyLoad({
+    callback_load: function (element) {
+      logElementEvent("LOADED", element);
+    },
+    callback_set: function (element) {
+      logElementEvent("SET", element);
+    }
+  });
 });
 
 /**
@@ -127,8 +139,9 @@ resetRestaurants = (restaurants) => {
  */
 fillRestaurantsHTML = (restaurants = self.restaurants) => {
   const ul = document.getElementById('restaurants-list');
-  restaurants.forEach(restaurant => { 
+  restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
+    lazyLoad.update();
   });
   addMarkersToMap();
 }
@@ -145,15 +158,15 @@ createRestaurantHTML = (restaurant) => {
   const imageSrcBig = DBHelper.imageUrlForRestaurant(restaurant);
   const imageSrcMedium = DBHelper.imageUrlForRestaurant(restaurant, 'medium');
   const imageSrcSmall = DBHelper.imageUrlForRestaurant(restaurant, 'small');
-  
+
   const image = document.createElement('img');
   image.className = 'restaurant-img';
-  image.src = imageSrcBig;
-  image.srcset = `
+  image.setAttribute('data-src', imageSrcBig);
+  image.setAttribute('data-srcset', `
     ${imageSrcSmall} 150w,
     ${imageSrcMedium} 300w,
     ${imageSrcBig} 800w,
-  `;
+  `);
   image.sizes = `
     (max-width: 1200px) 50%,
     (max-width: 767px) 100%,
@@ -161,6 +174,7 @@ createRestaurantHTML = (restaurant) => {
   `;
   image.alt = `${restaurant.name} restaurant`
   imageContainer.append(image);
+
   li.append(imageContainer);
 
   const name = document.createElement('h2');
@@ -177,7 +191,7 @@ createRestaurantHTML = (restaurant) => {
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
-  more.setAttribute('aria-label',  restaurant.name + ' View Details');
+  more.setAttribute('aria-label', restaurant.name + ' View Details');
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)
 
