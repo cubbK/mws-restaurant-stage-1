@@ -1,6 +1,28 @@
 let restaurant;
 var map;
 
+document.addEventListener("DOMContentLoaded", ()=>{
+  const reviewForm = document.querySelector("#reviewForm")
+  reviewForm.addEventListener("submit", event => {
+    event.preventDefault()
+    submitReview(reviewForm)
+  })
+})
+
+// 
+// Sends A post request with review data inside form-control
+//
+function submitReview (form) {
+  const reviewData = getReviewData(form)
+  
+}
+
+function getReviewData(form) {
+  const formGroups = form.querySelectorAll('.form-group')
+  console.log(formGroups)
+}
+
+
 /**
  * Initialize Google map, called from HTML.
  */
@@ -124,6 +146,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);
+
 }
 
 /**

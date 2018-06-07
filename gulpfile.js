@@ -36,4 +36,6 @@ gulp.task('js', () => {
   .pipe(gulp.dest('./js/minified/'))
 })
 
-gulp.task('default', ['image-resize-small', 'image-resize-medium'])
+gulp.task('images', ['image-resize-small', 'image-resize-medium'])
+
+gulp.task('default', ['css', 'js'])
