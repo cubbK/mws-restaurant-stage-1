@@ -5,22 +5,32 @@ document.addEventListener("DOMContentLoaded", ()=>{
   const reviewForm = document.querySelector("#reviewForm")
   reviewForm.addEventListener("submit", event => {
     event.preventDefault()
-    submitReview(reviewForm)
+    submitReview()
   })
 })
 
 // 
 // Sends A post request with review data inside form-control
 //
-function submitReview (form) {
-  const reviewData = getReviewData(form)
+function submitReview () {
+  const reviewData = getReviewData()
   
 }
 
-function getReviewData(form) {
-  const formGroups = form.querySelectorAll('.form-group')
-  console.log(formGroups)
-
+function getReviewData() {
+  const reviewName = document.querySelector('#review-name').value
+  const reviewRating =document.querySelector('#review-rating').value
+  const reviewComments = document.querySelector('#reviewForm textarea').value
+  console.log(reviewName)
+  console.log(reviewRating)
+  console.log(reviewComments)
+  const data = {
+    name: reviewName,
+    rating: reviewRating,
+    comments: reviewComments
+  }
+  console.log(data)
+  return data
 }
 
 
