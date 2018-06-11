@@ -20,6 +20,7 @@ function submitReview (form) {
 function getReviewData(form) {
   const formGroups = form.querySelectorAll('.form-group')
   console.log(formGroups)
+
 }
 
 

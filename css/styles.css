@@ -378,3 +378,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 #restaurant-hours td {
   color: #666;
 }
+
+.leave-review-container {
+  padding: 20px 0 100px;
+}
