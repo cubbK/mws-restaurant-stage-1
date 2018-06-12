@@ -13,24 +13,31 @@ document.addEventListener("DOMContentLoaded", ()=>{
 // Sends A post request with review data inside form-control
 //
 function submitReview () {
+  const restaurantId = getParameterByName('id')
   const reviewData = getReviewData()
+  reviewData.restaurant_id = restaurantId
+  reviewData.date = "October 26, 2016"
   
+  addReviewToHtml(reviewData)
 }
 
 function getReviewData() {
   const reviewName = document.querySelector('#review-name').value
   const reviewRating =document.querySelector('#review-rating').value
   const reviewComments = document.querySelector('#reviewForm textarea').value
-  console.log(reviewName)
-  console.log(reviewRating)
-  console.log(reviewComments)
+
   const data = {
     name: reviewName,
     rating: reviewRating,
     comments: reviewComments
   }
-  console.log(data)
+
   return data
+}
+
+function addReviewToHtml(review) {
+  const ul = document.getElementById('reviews-list');
+  ul.appendChild(createReviewHTML(review))
 }
 
 
