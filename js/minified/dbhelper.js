@@ -49,6 +49,12 @@ class DBHelper {
     });
   }
 
+  static async fetchReviewsByRestaurantId (id) {
+    const reviews = await fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`)
+    const reviewsData = await reviews.json()
+    return reviewsData
+  }
+
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
    */

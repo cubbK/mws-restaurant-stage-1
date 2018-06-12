@@ -16,9 +16,14 @@ function submitReview () {
   const restaurantId = getParameterByName('id')
   const reviewData = getReviewData()
   reviewData.restaurant_id = restaurantId
-  reviewData.date = "October 26, 2016"
+  reviewData.date = "October 26, 2018"
   
   addReviewToHtml(reviewData)
+
+  fetch('http://localhost:1337/reviews/', {
+    method: 'post',
+    body: JSON.stringify(reviewData)
+  })
 }
 
 function getReviewData() {
@@ -32,7 +37,7 @@ function getReviewData() {
     comments: reviewComments
   }
 
-  return data
+  return data 
 }
 
 function addReviewToHtml(review) {
@@ -63,7 +68,7 @@ window.initMap = () => {
 /**
  * Get current restaurant from page URL.
  */
-fetchRestaurantFromURL = (callback) => {
+fetchRestaurantFromURL = async (callback) => {
   if (self.restaurant) { // restaurant already fetched!
     callback(null, self.restaurant)
     return;
@@ -73,15 +78,20 @@ fetchRestaurantFromURL = (callback) => {
     error = 'No restaurant id in URL'
     callback(error, null);
   } else {
-    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+    DBHelper.fetchRestaurantById(id, async (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
         console.error(error);
         return;
       }
+
+      const reviews = await DBHelper.fetchReviewsByRestaurantId(id)
+      self.restaurant.reviews = reviews
+
       fillRestaurantHTML();
       callback(null, restaurant)
     });
+    
   }
 }
 
@@ -121,6 +131,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
+
   fillReviewsHTML();
 }
 
@@ -148,6 +159,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  * Create all reviews HTML and add them to the webpage.
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+  console.log(reviews)
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
