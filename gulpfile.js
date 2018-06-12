@@ -39,3 +39,8 @@ gulp.task('js', () => {
 gulp.task('images', ['image-resize-small', 'image-resize-medium'])
 
 gulp.task('default', ['css', 'js'])
+
+gulp.task('watch', () => {
+  gulp.watch('./js/*.js', ['js'])
+  gulp.watch('./css/styles.css', ['css'])
+})
