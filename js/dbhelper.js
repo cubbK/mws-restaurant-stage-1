@@ -15,42 +15,30 @@ class DBHelper {
   /**
    * Fetch all restaurants.
    */
-  static async fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const restaurants = JSON.parse(xhr.responseText);
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
+  static async fetchRestaurants() {
+    const restaurants = await fetch(DBHelper.DATABASE_URL)
+    const json = await restaurants.json()
+    return json
   }
 
   /**
    * Fetch a restaurant by its ID.
    */
-  static fetchRestaurantById(id, callback) {
-    // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        const restaurant = restaurants.find(r => r.id == id);
-        if (restaurant) { // Got the restaurant
-          callback(null, restaurant);
-        } else { // Restaurant does not exist in the database
-          callback('Restaurant does not exist', null);
-        }
-      }
-    });
+  static async fetchRestaurantById(id) {
+    const restaurants = await DBHelper.fetchRestaurants()
+    const restaurant = restaurants.find(r => r.id == id);
+    return restaurant
   }
 
   static async fetchReviewsByRestaurantId (id) {
-    const reviews = await fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`)
+    const allReviews = await DBHelper.fetchReviews() 
+
+    const reviews = allReviews.filter(review => review.restaurant_id = id)
+    return reviews
+  }
+
+  static async fetchReviews () {
+    const reviews = await fetch(`http://localhost:1337/reviews/`)
     const reviewsData = await reviews.json()
     return reviewsData
   }

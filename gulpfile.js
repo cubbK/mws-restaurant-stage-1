@@ -32,7 +32,10 @@ gulp.task('css', () => {
 
 gulp.task('js', () => {
   gulp.src('./js/*.js')
-  .pipe(minify())
+  .pipe(minify({
+    mangle: false,
+    compress: false
+  }))
   .pipe(gulp.dest('./js/minified/'))
 })
 

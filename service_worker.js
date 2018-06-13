@@ -9,7 +9,7 @@ self.addEventListener('fetch', event => {
   // Prevent the default, and handle the request ourselves.
   event.respondWith(async function () {
     const url = new URL(event.request.url);
-
+    console.log('pathname: ', url.href)
     if (url.pathname === '/restaurants') {
 
       //
@@ -23,6 +23,8 @@ self.addEventListener('fetch', event => {
         return putRestaurantsInIndexedDbAndReturnThem(event)
       }
 
+    } else if (url.pathname === '/reviews') {
+      console.log('reviews')
     } else {
       return useCache(event);
     }

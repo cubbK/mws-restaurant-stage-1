@@ -49,50 +49,33 @@ function addReviewToHtml(review) {
 /**
  * Initialize Google map, called from HTML.
  */
-window.initMap = () => {
-  fetchRestaurantFromURL((error, restaurant) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      self.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: restaurant.latlng,
-        scrollwheel: false
-      });
-      fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-    }
+window.initMap = async () => {
+  const restaurant = await fetchRestaurantFromURL()
+  self.map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 16,
+    center: restaurant.latlng,
+    scrollwheel: false
   });
+  fillBreadcrumb();
+  DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
 }
 
 /**
  * Get current restaurant from page URL.
  */
 fetchRestaurantFromURL = async (callback) => {
-  if (self.restaurant) { // restaurant already fetched!
-    callback(null, self.restaurant)
-    return;
-  }
   const id = getParameterByName('id');
-  if (!id) { // no id found in URL
-    error = 'No restaurant id in URL'
-    callback(error, null);
-  } else {
-    DBHelper.fetchRestaurantById(id, async (error, restaurant) => {
-      self.restaurant = restaurant;
-      if (!restaurant) {
-        console.error(error);
-        return;
-      }
+  const restaurant = await DBHelper.fetchRestaurantById(id)
+  const reviews = await DBHelper.fetchReviewsByRestaurantId(id)
 
-      const reviews = await DBHelper.fetchReviewsByRestaurantId(id)
-      self.restaurant.reviews = reviews
+  console.log(restaurant)
+  console.log(reviews)
 
-      fillRestaurantHTML();
-      callback(null, restaurant)
-    });
-    
-  }
+  self.restaurant = restaurant
+  self.reviews = reviews
+
+  fillRestaurantHTML();
+  return restaurant
 }
 
 /**
@@ -158,8 +141,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
-  console.log(reviews)
+fillReviewsHTML = (reviews = self.reviews) => {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
