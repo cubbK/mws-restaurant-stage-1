@@ -9,25 +9,32 @@ self.addEventListener('fetch', event => {
   // Prevent the default, and handle the request ourselves.
   event.respondWith(async function () {
     const url = new URL(event.request.url);
-    console.log('pathname: ', url.href)
+    console.log('pathname: ', url.pathname)
     if (url.pathname === '/restaurants') {
 
       //
       // Get restaurants array from IndexedDB
       //
-      const responseData = await useIndexedDb(event);
+      const responseData = await useIndexedDb(event, 'restaurants');
 
       if (responseData.length > 0) {
-        return getIndexedDbResponse(responseData)
+        return getIndexedDbResponse(responseData, 'restaurants')
       } else {
-        return putRestaurantsInIndexedDbAndReturnThem(event)
+        return putRestaurantsInIndexedDbAndReturnThem(event, 'restaurants')
       }
 
-    } else if (url.pathname === '/reviews') {
-      console.log('reviews')
-    } else {
-      return useCache(event);
     }
+    if (url.pathname === '/reviews' || url.pathname === '/reviews/') {
+      const responseData = await useIndexedDb(event, 'reviews');
+
+      if (responseData.length > 0) {
+        return getIndexedDbResponse(responseData, 'reviews')
+      } else {
+        return putRestaurantsInIndexedDbAndReturnThem(event, 'reviews')
+      }
+    }
+    return useCache(event);
+
   }());
 });
 
@@ -44,10 +51,11 @@ self.addEventListener('activate', event => {
   request.onupgradeneeded = function (event) {
     db = event.target.result;
     var objectStore = db.createObjectStore("restaurants", { keyPath: "id" });
+    db.createObjectStore("reviews", { keyPath: "id" });
   }
 })
 
-async function putRestaurantsInIndexedDbAndReturnThem(event) {
+async function putRestaurantsInIndexedDbAndReturnThem(event, store) {
   const restaurantsFetch = await fetch(event.request);
   const restaurants = await restaurantsFetch.json();
   console.log('<0')
@@ -55,31 +63,30 @@ async function putRestaurantsInIndexedDbAndReturnThem(event) {
   const DBOpenRequest = indexedDB.open("RestaurantsDB", 1);
   DBOpenRequest.onsuccess = async event => {
     var db = event.target.result;
-    var objectStore = db.transaction('restaurants', 'readwrite').objectStore("restaurants");
+    var objectStore = db.transaction(store, 'readwrite').objectStore(store);
     restaurants.map(restaurant => objectStore.put(restaurant))
   }
   return restaurantsFetch
 }
 
-async function getIndexedDbResponse(responseData) {
+async function getIndexedDbResponse(responseData, type) {
   console.log('>0')
-  const responseJson = {
-    restaurants: responseData
-  }
+  const responseJson = {}
+  responseJson[type] = responseData
   const blob = new Blob([JSON.stringify(responseData, null, 2)], { type: 'application/json' })
   const init = { "status": 200, "statusText": "SuperSmashingGreat!" };
   const response = new Response(blob, init);
   return response
 }
 
-async function useIndexedDb(fetchEvent) {
+async function useIndexedDb(fetchEvent, store) {
   return new Promise(resolve => {
     const DBOpenRequest = indexedDB.open("RestaurantsDB", 1);
 
     DBOpenRequest.onsuccess = event => {
 
       var db = event.target.result;
-      var objectStore = db.transaction('restaurants', 'readwrite').objectStore("restaurants");
+      var objectStore = db.transaction(store, 'readwrite').objectStore(store);
       var restaurantsRequest = objectStore.getAll();
       restaurantsRequest.onsuccess = function () {
         resolve(restaurantsRequest.result);
