@@ -16,7 +16,6 @@ function submitReview () {
   const restaurantId = getParameterByName('id')
   const reviewData = getReviewData()
   reviewData.restaurant_id = restaurantId
-  reviewData.date = "October 26, 2018"
   
   addReviewToHtml(reviewData)
 
@@ -169,10 +168,6 @@ createReviewHTML = (review) => {
   const name = document.createElement('p');
   name.innerHTML = review.name;
   li.appendChild(name);
-
-  const date = document.createElement('p');
-  date.innerHTML = review.date;
-  li.appendChild(date);
 
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
