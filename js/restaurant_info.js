@@ -19,6 +19,8 @@ function submitReview () {
   
   addReviewToHtml(reviewData)
 
+  console.log(reviewData)
+
   fetch('http://localhost:1337/reviews/', {
     method: 'post',
     body: JSON.stringify(reviewData)
@@ -205,3 +207,8 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+
+window.addEventListener('offline', function(e) { console.log('offline'); });
+
+window.addEventListener('online', function(e) { console.log('online'); });

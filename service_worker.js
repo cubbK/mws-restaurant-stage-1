@@ -9,7 +9,6 @@ self.addEventListener('fetch', event => {
   // Prevent the default, and handle the request ourselves.
   event.respondWith(async function () {
     const url = new URL(event.request.url);
-    console.log('pathname: ', url.pathname)
     if (url.pathname === '/restaurants') {
 
       //
@@ -24,7 +23,13 @@ self.addEventListener('fetch', event => {
       }
 
     }
+    if((url.pathname === '/reviews' || url.pathname === '/reviews/') && (event.request.method === 'POST')) {
+      console.log('review post')
+      return
+    }
+
     if (url.pathname === '/reviews' || url.pathname === '/reviews/') {
+      console.log(event.request)
       const responseData = await useIndexedDb(event, 'reviews');
 
       if (responseData.length > 0) {
@@ -115,3 +120,4 @@ async function useCache(event) {
 
   return fetchedResource
 }
+
