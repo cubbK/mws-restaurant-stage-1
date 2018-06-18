@@ -218,6 +218,7 @@ getParameterByName = (name, url) => {
 window.addEventListener('offline', function (e) {
   const panel = document.querySelector(`.network-panel`)
   panel.classList.add('offline')
+  panel.classList.remove('online')
   panel.innerHTML = `Offline`
 
 });
