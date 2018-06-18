@@ -9,6 +9,8 @@ self.addEventListener('fetch', async event => {
   // Prevent the default, and handle the request ourselves.
   event.respondWith(async function () {
     const url = new URL(event.request.url);
+
+    console.log(url.pathname)
     if (url.pathname === '/restaurants') {
 
       //
@@ -24,9 +26,8 @@ self.addEventListener('fetch', async event => {
 
     }
     if((url.pathname === '/reviews' || url.pathname === '/reviews/') && (event.request.method === 'POST')) {
-      console.log('review post')
-      console.log( await event.request.json())
-      return
+      console.log('POST-ing review')
+      return await putReviewInDb(event)
     }
 
     if (url.pathname === '/reviews' || url.pathname === '/reviews/') {
@@ -120,5 +121,24 @@ async function useCache(event) {
   cache.put(event.request, fetchedResource.clone());
 
   return fetchedResource
+}
+
+async function putReviewInDb (event) {
+  const review = await event.request.clone().json()
+  const response = await fetch(event.request.clone(), {
+    method: 'POST',
+    body: JSON.stringify(review)
+  })
+  const responseJson = await response.json()
+  console.log(responseJson, 'responseJson')
+
+  const DBOpenRequest = indexedDB.open("RestaurantsDB", 1);
+  DBOpenRequest.onsuccess = async event => {
+    var db = event.target.result;
+    var objectStore = db.transaction('reviews', 'readwrite').objectStore('reviews');
+    objectStore.put(responseJson)
+  }
+
+  return response
 }
 

@@ -33,6 +33,7 @@ function submitReview() {
 
 }
 
+
 function getReviewData() {
   const reviewName = document.querySelector('#review-name').value
   const reviewRating = document.querySelector('#review-rating').value
@@ -228,8 +229,22 @@ window.addEventListener('online', function (e) {
   panel.classList.add('online')
   panel.classList.remove('offline')
   panel.innerHTML = `Back online`
+
+  submitAllUnsavedReviews()
+
   setTimeout(() => {
     panel.classList.remove('online')
     panel.innerHTML = ``
   }, 2000)
  });
+
+ function submitAllUnsavedReviews () {
+  console.log(`uploading unsaved reviews`)
+  unsavedReviews.map(review => {
+    fetch('http://localhost:1337/reviews/', {
+      method: 'post',
+      body: JSON.stringify(review)
+    })
+  })
+  unsavedReviews = []
+ }
