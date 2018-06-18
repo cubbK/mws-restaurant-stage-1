@@ -215,6 +215,20 @@ getParameterByName = (name, url) => {
 }
 
 
-window.addEventListener('offline', function (e) { console.log('offline'); });
+window.addEventListener('offline', function (e) {
+  const panel = document.querySelector(`.network-panel`)
+  panel.classList.add('offline')
+  panel.innerHTML = `Offline`
 
-window.addEventListener('online', function (e) { console.log('online'); });
+});
+
+window.addEventListener('online', function (e) { 
+  const panel = document.querySelector(`.network-panel`)
+  panel.classList.add('online')
+  panel.classList.remove('offline')
+  panel.innerHTML = `Back online`
+  setTimeout(() => {
+    panel.classList.remove('online')
+    panel.innerHTML = ``
+  }, 2000)
+ });
