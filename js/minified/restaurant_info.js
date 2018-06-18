@@ -1,7 +1,8 @@
 let restaurant;
 var map;
+let unsavedReviews = []
 
-document.addEventListener("DOMContentLoaded", ()=>{
+document.addEventListener("DOMContentLoaded", () => {
   const reviewForm = document.querySelector("#reviewForm")
   reviewForm.addEventListener("submit", event => {
     event.preventDefault()
@@ -12,24 +13,29 @@ document.addEventListener("DOMContentLoaded", ()=>{
 // 
 // Sends A post request with review data inside form-control
 //
-function submitReview () {
+function submitReview() {
   const restaurantId = getParameterByName('id')
   const reviewData = getReviewData()
   reviewData.restaurant_id = restaurantId
-  
+
   addReviewToHtml(reviewData)
 
   console.log(reviewData)
+  if (window.navigator.onLine) {
+    fetch('http://localhost:1337/reviews/', {
+      method: 'post',
+      body: JSON.stringify(reviewData)
+    })
+  } else {
+    unsavedReviews.push(reviewData)
+    console.log(unsavedReviews, 'unsavedReviews')
+  }
 
-  fetch('http://localhost:1337/reviews/', {
-    method: 'post',
-    body: JSON.stringify(reviewData)
-  })
 }
 
 function getReviewData() {
   const reviewName = document.querySelector('#review-name').value
-  const reviewRating =document.querySelector('#review-rating').value
+  const reviewRating = document.querySelector('#review-rating').value
   const reviewComments = document.querySelector('#reviewForm textarea').value
 
   const data = {
@@ -38,7 +44,7 @@ function getReviewData() {
     comments: reviewComments
   }
 
-  return data 
+  return data
 }
 
 function addReviewToHtml(review) {
@@ -185,7 +191,7 @@ createReviewHTML = (review) => {
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
-fillBreadcrumb = (restaurant=self.restaurant) => {
+fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
@@ -209,6 +215,6 @@ getParameterByName = (name, url) => {
 }
 
 
-window.addEventListener('offline', function(e) { console.log('offline'); });
+window.addEventListener('offline', function (e) { console.log('offline'); });
 
-window.addEventListener('online', function(e) { console.log('online'); });
+window.addEventListener('online', function (e) { console.log('online'); });

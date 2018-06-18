@@ -4,7 +4,7 @@ if ('serviceWorker' in navigator) {
     .then(function () { console.log("Service Worker Registered"); });
 }
 
-self.addEventListener('fetch', event => {
+self.addEventListener('fetch', async event => {
 
   // Prevent the default, and handle the request ourselves.
   event.respondWith(async function () {
@@ -25,6 +25,7 @@ self.addEventListener('fetch', event => {
     }
     if((url.pathname === '/reviews' || url.pathname === '/reviews/') && (event.request.method === 'POST')) {
       console.log('review post')
+      console.log( await event.request.json())
       return
     }
 
