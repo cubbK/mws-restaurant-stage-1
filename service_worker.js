@@ -10,7 +10,13 @@ self.addEventListener('fetch', async event => {
   event.respondWith(async function () {
     const url = new URL(event.request.url);
 
-    console.log(url.pathname)
+    if (url.pathname.includes(`restaurants`) && url.search.includes(`?is_favorite`)) {
+      console.log(url)
+      
+      return await fetch(event.request, {
+        method: `POST`
+      })
+    }
     if (url.pathname === '/restaurants') {
 
       //
@@ -25,7 +31,7 @@ self.addEventListener('fetch', async event => {
       }
 
     }
-    if((url.pathname === '/reviews' || url.pathname === '/reviews/') && (event.request.method === 'POST')) {
+    if ((url.pathname === '/reviews' || url.pathname === '/reviews/') && (event.request.method === 'POST')) {
       console.log('POST-ing review')
       return await putReviewInDb(event)
     }
@@ -123,7 +129,7 @@ async function useCache(event) {
   return fetchedResource
 }
 
-async function putReviewInDb (event) {
+async function putReviewInDb(event) {
   const review = await event.request.clone().json()
   const response = await fetch(event.request.clone(), {
     method: 'POST',

@@ -16,12 +16,16 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 function toggleFav (event) {
+  event.target.classList.toggle(`true`)
   const restaurantId = getParameterByName('id')
   const isFavorite = event.target.classList.contains(`true`)
+  console.log(isFavorite, `is favorite`)
 
-  fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}`)
+  fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {
+    method: `POST`
+  })
 
-  event.target.classList.toggle(`true`)
+  
 }
 
 // 
