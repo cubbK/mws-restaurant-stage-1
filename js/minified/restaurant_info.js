@@ -8,7 +8,21 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault()
     submitReview()
   })
+
+  const favoriteBtn = document.querySelector(`.favorite-star`)
+  favoriteBtn.addEventListener(`click`, (event) => {
+    toggleFav(event)
+  })
 })
+
+function toggleFav (event) {
+  const restaurantId = getParameterByName('id')
+  const isFavorite = event.target.classList.contains(`true`)
+
+  fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}`)
+
+  event.target.classList.toggle(`true`)
+}
 
 // 
 // Sends A post request with review data inside form-control

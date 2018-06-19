@@ -403,3 +403,18 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 .network-panel.online {
   background: yellowgreen;
 }
+
+.favorite-star {
+  font-size: 2em;
+  color: #444;
+  cursor: pointer;
+}
+
+.favorite-star.true {
+  color: #9370d8;
+}
+
+.favorite-container {
+  display: flex;
+  align-items: center;
+}
