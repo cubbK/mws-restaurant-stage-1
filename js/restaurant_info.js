@@ -22,13 +22,14 @@ function toggleFav(event) {
   console.log(isFavorite, `is favorite`)
 
   if (window.navigator.onLine) {
+    DBHelper.updateFavoriteRestaurant(isFavorite, restaurantId)
     fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {
       method: `POST`
     })
   } else {
-    DBHelper.updateFavoriteRestaurant(isFavorite)
+    DBHelper.updateFavoriteRestaurant(isFavorite, restaurantId)
   }
-  DBHelper.updateFavoriteRestaurant(isFavorite, restaurantId)
+  
 
 
 }
