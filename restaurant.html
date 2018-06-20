@@ -7,7 +7,7 @@
     <!-- Normalize.css for better cross-browser consistency -->
     <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
     <!-- Main CSS file -->
-    <link rel="stylesheet" href="css/minified/styles.css" type="text/css">
+    
     <link rel="manifest" href="/manifest.webmanifest">
     <meta name="theme-color" content="#252831" />
     <title>Restaurant Info</title>
@@ -64,6 +64,7 @@
         <section class="leave-review-container">
             <form id="reviewForm" class="review-form">
                 <div class="form-group">
+                    <label for="review-name">Name</label>
                     <input type="text" placeholder="Name" name="name" id="review-name">
                 </div>
                 <div class="form-group">
@@ -71,6 +72,7 @@
                     <input type="number" name="rating" min="1" max="5" value="5" id="review-rating">
                 </div>
                 <div class="form-group">
+                    <label for="review-comments">Comments</label>
                     <textarea name="comments" id="" cols="30" rows="10" placeholder="Review" id="review-comments"></textarea>
                 </div>
                 <button>Submit</button>
@@ -99,7 +101,7 @@
     <!-- Google Maps -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCGOyW-plHZ74__x7_Vk--0ull2aIf4CU&libraries=places&callback=initMap"></script>
     <!-- End scripts -->
-
+    <link rel="stylesheet" href="css/minified/styles.css" type="text/css">
 </body>
 
 </html>
