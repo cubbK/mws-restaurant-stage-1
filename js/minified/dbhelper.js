@@ -138,4 +138,21 @@ class DBHelper {
     return marker;
   }
 
+  static updateFavoriteRestaurant(toFavorite, restaurantId) {
+    const DBOpenRequest = indexedDB.open("RestaurantsDB", 1)
+
+    DBOpenRequest.onsuccess = event => {
+
+      var db = event.target.result;
+      var objectStore = db.transaction(`restaurants`, 'readwrite').objectStore(`restaurants`)
+      var restaurantsRequest = objectStore.getAll()
+      restaurantsRequest.onsuccess = function () {
+        const restaurants = restaurantsRequest.result
+        const neededRestaurant = restaurants.filter(restaurant => restaurant.id == restaurantId)[0]
+        neededRestaurant.is_favorite = toFavorite
+        objectStore.put(neededRestaurant)
+      }
+    }
+  }
+
 }

@@ -15,17 +15,22 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 })
 
-function toggleFav (event) {
+function toggleFav(event) {
   event.target.classList.toggle(`true`)
   const restaurantId = getParameterByName('id')
   const isFavorite = event.target.classList.contains(`true`)
   console.log(isFavorite, `is favorite`)
 
-  fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {
-    method: `POST`
-  })
+  if (window.navigator.onLine) {
+    fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {
+      method: `POST`
+    })
+  } else {
+    DBHelper.updateFavoriteRestaurant(isFavorite)
+  }
+  DBHelper.updateFavoriteRestaurant(isFavorite, restaurantId)
 
-  
+
 }
 
 // 
@@ -242,7 +247,7 @@ window.addEventListener('offline', function (e) {
 
 });
 
-window.addEventListener('online', function (e) { 
+window.addEventListener('online', function (e) {
   const panel = document.querySelector(`.network-panel`)
   panel.classList.add('online')
   panel.classList.remove('offline')
@@ -254,9 +259,9 @@ window.addEventListener('online', function (e) {
     panel.classList.remove('online')
     panel.innerHTML = ``
   }, 2000)
- });
+});
 
- function submitAllUnsavedReviews () {
+function submitAllUnsavedReviews() {
   console.log(`uploading unsaved reviews`)
   unsavedReviews.map(review => {
     fetch('http://localhost:1337/reviews/', {
@@ -265,4 +270,4 @@ window.addEventListener('online', function (e) {
     })
   })
   unsavedReviews = []
- }
+}
