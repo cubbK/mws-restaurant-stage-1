@@ -8,21 +8,24 @@ self.addEventListener('fetch', async event => {
 
   // Prevent the default, and handle the request ourselves.
   event.respondWith(async function () {
-    const url = new URL(event.request.url);
+    const url = new URL(event.request.clone().url);
 
     if (url.pathname.includes(`restaurants`) && url.search.includes(`?is_favorite`)) {
-      console.log(url)
       
       return await fetch(event.request, {
         method: `POST`
       })
     }
+
     if (url.pathname === '/restaurants') {
+      console.log(`pathname is /restaurants`)
 
       //
       // Get restaurants array from IndexedDB
       //
-      const responseData = await useIndexedDb(event, 'restaurants');
+      const responseData = await useIndexedDb('restaurants');
+
+      console.log(responseData.length, "response data length on restaurants fetch")
 
       if (responseData.length > 0) {
         return getIndexedDbResponse(responseData, 'restaurants')
@@ -37,9 +40,9 @@ self.addEventListener('fetch', async event => {
     }
 
     if (url.pathname === '/reviews' || url.pathname === '/reviews/') {
-      console.log(event.request)
-      const responseData = await useIndexedDb(event, 'reviews');
+      const responseData = await useIndexedDb('reviews');
 
+      console.log(responseData.length, `response data on fetching reviews`)
       if (responseData.length > 0) {
         return getIndexedDbResponse(responseData, 'reviews')
       } else {
@@ -69,16 +72,16 @@ self.addEventListener('activate', event => {
 })
 
 async function putRestaurantsInIndexedDbAndReturnThem(event, store) {
-  const restaurantsFetch = await fetch(event.request);
-  const restaurants = await restaurantsFetch.json();
+  const restaurantsFetch = await fetch(event.request.clone());
+  const restaurants = await restaurantsFetch.clone().json();
   console.log('<0')
-  console.log(restaurants)
   const DBOpenRequest = indexedDB.open("RestaurantsDB", 1);
   DBOpenRequest.onsuccess = async event => {
     var db = event.target.result;
     var objectStore = db.transaction(store, 'readwrite').objectStore(store);
     restaurants.map(restaurant => objectStore.put(restaurant))
   }
+  console.log(`put request in store`)
   return restaurantsFetch
 }
 
@@ -92,7 +95,7 @@ async function getIndexedDbResponse(responseData, type) {
   return response
 }
 
-async function useIndexedDb(fetchEvent, store) {
+async function useIndexedDb(store) {
   return new Promise(resolve => {
     const DBOpenRequest = indexedDB.open("RestaurantsDB", 1);
 
