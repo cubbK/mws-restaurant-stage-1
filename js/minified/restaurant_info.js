@@ -16,23 +16,27 @@ document.addEventListener("DOMContentLoaded", () => {
     toggleFav(event)
   })
 
-  checkIfStartIsActive()
+  checkIfStarIsActive()
 })
 
-function checkIfStartIsActive () {
+async function checkIfStarIsActive () {
   const restaurantId = getParameterByName('id')
-  const isFav = DBHelper.isRestaurantFav(restaurantId)
+  const isFavString = await DBHelper.isRestaurantFav(restaurantId)
   const star = document.querySelector('.favorite-star')
-  console.log(isFav, 'isFav')
-  console.log(star)
+  
+  const isFav = isFavString == 'true'
+
+  console.log(isFavString, typeof(isFavString))
+  console.log(isFav, typeof(isFav))
+
   isFav ? star.classList.add('true') : star.classList.remove('true')
 }
 
 function toggleFav(event) {
   event.target.classList.toggle(`true`)
   const restaurantId = getParameterByName('id')
-  const isFavorite = event.target.classList.contains(`true`)
-  console.log(isFavorite, `is favorite`)
+  const isFavorite = !DBHelper.isRestaurantFav(restaurantId)
+  
 
   if (window.navigator.onLine) {
     DBHelper.updateFavoriteRestaurant(isFavorite, restaurantId)
@@ -57,7 +61,7 @@ function submitReview() {
 
   addReviewToHtml(reviewData)
 
-  console.log(reviewData)
+  
   if (window.navigator.onLine) {
     fetch('http://localhost:1337/reviews/', {
       method: 'post',
@@ -65,7 +69,7 @@ function submitReview() {
     })
   } else {
     unsavedReviews.push(reviewData)
-    console.log(unsavedReviews, 'unsavedReviews')
+  
   }
 
 }
@@ -113,8 +117,7 @@ fetchRestaurantFromURL = async (callback) => {
   const restaurant = await DBHelper.fetchRestaurantById(id)
   const reviews = await DBHelper.fetchReviewsByRestaurantId(id)
 
-  console.log(restaurant)
-  console.log(reviews)
+ 
 
   self.restaurant = restaurant
   self.reviews = reviews
