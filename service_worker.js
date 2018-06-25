@@ -1,7 +1,24 @@
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
     .register('./service_worker.js')
-    .then(function () { console.log("Service Worker Registered"); });
+    .then(function () {
+      console.log("Service Worker Registered");
+      //
+      // Define your database
+      //
+      var db;
+      var request = indexedDB.open("RestaurantsDB", 1);
+      request.onerror = function (event) {
+        console.log('error creating db', event.error)
+      };
+
+      request.onupgradeneeded = function (event) {
+        console.log('succes')
+        db = event.target.result;
+        var objectStore = db.createObjectStore("restaurants", { keyPath: "id" });
+        db.createObjectStore("reviews", { keyPath: "id" });
+      }
+    });
 }
 
 self.addEventListener('fetch', async event => {
@@ -11,7 +28,7 @@ self.addEventListener('fetch', async event => {
     const url = new URL(event.request.clone().url);
 
     if (url.pathname.includes(`restaurants`) && url.search.includes(`?is_favorite`)) {
-      
+
       return await fetch(event.request, {
         method: `POST`
       })
@@ -55,19 +72,10 @@ self.addEventListener('fetch', async event => {
 });
 
 self.addEventListener('activate', event => {
-  //
-  // Define your database
-  //
-  var db;
-  var request = indexedDB.open("RestaurantsDB");
-  request.onerror = function (event) {
-    console.log('error creating db', event.error)
-  };
+
 
   request.onupgradeneeded = function (event) {
-    db = event.target.result;
-    var objectStore = db.createObjectStore("restaurants", { keyPath: "id" });
-    db.createObjectStore("reviews", { keyPath: "id" });
+
   }
 })
 

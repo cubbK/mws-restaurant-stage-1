@@ -3,6 +3,8 @@ var map;
 let unsavedReviews = []
 
 document.addEventListener("DOMContentLoaded", () => {
+  DBHelper.fetchRestaurants()
+
   const reviewForm = document.querySelector("#reviewForm")
   reviewForm.addEventListener("submit", event => {
     event.preventDefault()
@@ -13,7 +15,18 @@ document.addEventListener("DOMContentLoaded", () => {
   favoriteBtn.addEventListener(`click`, (event) => {
     toggleFav(event)
   })
+
+  checkIfStartIsActive()
 })
+
+function checkIfStartIsActive () {
+  const restaurantId = getParameterByName('id')
+  const isFav = DBHelper.isRestaurantFav(restaurantId)
+  const star = document.querySelector('.favorite-star')
+  console.log(isFav, 'isFav')
+  console.log(star)
+  isFav ? star.classList.add('true') : star.classList.remove('true')
+}
 
 function toggleFav(event) {
   event.target.classList.toggle(`true`)
