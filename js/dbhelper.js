@@ -158,8 +158,10 @@ class DBHelper {
   static async isRestaurantFav(restaurantId) {
     const request = await fetch(`http://localhost:1337/restaurants/`)
     const restaurants = await request.json()
-    const neededRestaurant = restaurants.filter(restaurant => restaurant.id == restaurantId)[0]
-    console.log(neededRestaurant, 'fav res')
-    return neededRestaurant.is_favorite
+
+    const restaurant = restaurants.filter(restaurant => restaurant.id == restaurantId)[0]
+    
+    console.log(restaurant, 'fav res')
+    return restaurant.is_favorite == 'true'
   }
 }

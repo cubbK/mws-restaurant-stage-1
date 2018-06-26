@@ -33,7 +33,7 @@ self.addEventListener('fetch', async event => {
       return await fetch(event.request)
     }
 
-    if (url.pathname === '/restaurants') {
+    if (url.pathname === '/restaurants' || url.pathname === '/restaurants/') {
 
       //
       // Get restaurants array from IndexedDB

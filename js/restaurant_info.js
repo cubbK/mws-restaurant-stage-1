@@ -21,30 +21,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function checkIfStarIsActive () {
   const restaurantId = getParameterByName('id')
-  const isFavString = await DBHelper.isRestaurantFav(restaurantId)
+  const isFav = await DBHelper.isRestaurantFav(restaurantId)
   const star = document.querySelector('.favorite-star')
-  
-  const isFav = isFavString == 'true'
 
-  console.log(isFavString, typeof(isFavString))
-  console.log(isFav, typeof(isFav))
+  console.log(isFav, typeof(isFav), 'is Fav in in check start if active')
 
   isFav ? star.classList.add('true') : star.classList.remove('true')
 }
 
-function toggleFav(event) {
+async function toggleFav(event) {
   event.target.classList.toggle(`true`)
   const restaurantId = getParameterByName('id')
-  const isFavorite = !DBHelper.isRestaurantFav(restaurantId)
+  const isFavorite = await DBHelper.isRestaurantFav(restaurantId)
+  const toFavorite = (!isFavorite).toString()
   
+  console.log('toFavorite', toFavorite)
 
   if (window.navigator.onLine) {
-    DBHelper.updateFavoriteRestaurant(isFavorite, restaurantId)
-    fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {
+    DBHelper.updateFavoriteRestaurant(toFavorite, restaurantId)
+    fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${toFavorite}`, {
       method: `POST`
     })
   } else {
-    DBHelper.updateFavoriteRestaurant(isFavorite, restaurantId)
+    DBHelper.updateFavoriteRestaurant(toFavorite, restaurantId)
   }
   
 
