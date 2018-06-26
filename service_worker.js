@@ -16,6 +16,7 @@ if ('serviceWorker' in navigator) {
         db = event.target.result;
         var objectStore = db.createObjectStore("restaurants", { keyPath: "id" });
         db.createObjectStore("reviews", { keyPath: "id" });
+        db.createObjectStore("unsavedReviews", { keyPath: "unsavedId" } );
       }
     });
 }

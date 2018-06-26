@@ -160,8 +160,39 @@ class DBHelper {
     const restaurants = await request.json()
 
     const restaurant = restaurants.filter(restaurant => restaurant.id == restaurantId)[0]
-    
+
     console.log(restaurant, 'fav res')
     return restaurant.is_favorite == 'true'
+  }
+
+  static async getUnsavedReviews() {
+    return new Promise(resolve => {
+      const DBOpenRequest = indexedDB.open("RestaurantsDB", 1)
+
+      DBOpenRequest.onsuccess = event => {
+
+        var db = event.target.result;
+        var objectStore = db.transaction(`unsavedReviews`, 'readwrite').objectStore(`unsavedReviews`)
+        var unsavedReviewsRequest = objectStore.getAll()
+        unsavedReviewsRequest.onsuccess = function () {
+          const unsavedReviews = unsavedReviewsRequest.result
+          resolve(unsavedReviews)
+        }
+      }
+    })
+
+  }
+
+  static addUnsavedReview(review) {
+    const DBOpenRequest = indexedDB.open("RestaurantsDB", 1)
+
+    DBOpenRequest.onsuccess = event => {
+
+      var db = event.target.result;
+      var objectStore = db.transaction(`unsavedReviews`, 'readwrite').objectStore(`unsavedReviews`)
+      var unsavedReviewsRequest = objectStore.add(review)
+      
+    }
+
   }
 }

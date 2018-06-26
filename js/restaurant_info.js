@@ -3,6 +3,7 @@ var map;
 let unsavedReviews = []
 
 document.addEventListener("DOMContentLoaded", () => {
+  
   DBHelper.fetchRestaurants()
 
   const reviewForm = document.querySelector("#reviewForm")
@@ -53,7 +54,7 @@ async function toggleFav(event) {
 // 
 // Sends A post request with review data inside form-control
 //
-function submitReview() {
+async function submitReview() {
   const restaurantId = getParameterByName('id')
   const reviewData = getReviewData()
   reviewData.restaurant_id = restaurantId
@@ -67,10 +68,14 @@ function submitReview() {
       body: JSON.stringify(reviewData)
     })
   } else {
-    unsavedReviews.push(reviewData)
-  
+    const unsavedReviews = await DBHelper.getUnsavedReviews()
+    const unsavedReviewsLength = unsavedReviews.length
+    console.log(unsavedReviewsLength)
+    DBHelper.addUnsavedReview({...reviewData, unsavedId: unsavedReviewsLength})
+    
   }
-
+  
+  console.log(await DBHelper.getUnsavedReviews(), 'unsavedReviews')
 }
 
 
