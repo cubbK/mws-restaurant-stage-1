@@ -1,9 +1,8 @@
 let restaurant;
 var map;
-let unsavedReviews = []
 
 document.addEventListener("DOMContentLoaded", () => {
-  
+
   DBHelper.fetchRestaurants()
 
   const reviewForm = document.querySelector("#reviewForm")
@@ -20,12 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
   checkIfStarIsActive()
 })
 
-async function checkIfStarIsActive () {
+async function checkIfStarIsActive() {
   const restaurantId = getParameterByName('id')
   const isFav = await DBHelper.isRestaurantFav(restaurantId)
   const star = document.querySelector('.favorite-star')
 
-  console.log(isFav, typeof(isFav), 'is Fav in in check start if active')
+  console.log(isFav, typeof (isFav), 'is Fav in in check start if active')
 
   isFav ? star.classList.add('true') : star.classList.remove('true')
 }
@@ -35,7 +34,7 @@ async function toggleFav(event) {
   const restaurantId = getParameterByName('id')
   const isFavorite = await DBHelper.isRestaurantFav(restaurantId)
   const toFavorite = (!isFavorite).toString()
-  
+
   console.log('toFavorite', toFavorite)
 
   if (window.navigator.onLine) {
@@ -46,7 +45,7 @@ async function toggleFav(event) {
   } else {
     DBHelper.updateFavoriteRestaurant(toFavorite, restaurantId)
   }
-  
+
 
 
 }
@@ -61,7 +60,7 @@ async function submitReview() {
 
   addReviewToHtml(reviewData)
 
-  
+
   if (window.navigator.onLine) {
     fetch('http://localhost:1337/reviews/', {
       method: 'post',
@@ -71,10 +70,10 @@ async function submitReview() {
     const unsavedReviews = await DBHelper.getUnsavedReviews()
     const unsavedReviewsLength = unsavedReviews.length
     console.log(unsavedReviewsLength)
-    DBHelper.addUnsavedReview({...reviewData, unsavedId: unsavedReviewsLength})
-    
+    DBHelper.addUnsavedReview({ ...reviewData, unsavedId: unsavedReviewsLength })
+
   }
-  
+
   console.log(await DBHelper.getUnsavedReviews(), 'unsavedReviews')
 }
 
@@ -121,7 +120,7 @@ fetchRestaurantFromURL = async (callback) => {
   const restaurant = await DBHelper.fetchRestaurantById(id)
   const reviews = await DBHelper.fetchReviewsByRestaurantId(id)
 
- 
+
 
   self.restaurant = restaurant
   self.reviews = reviews
@@ -133,7 +132,7 @@ fetchRestaurantFromURL = async (callback) => {
 /**
  * Create restaurant HTML and add it to the webpage
  */
-fillRestaurantHTML = (restaurant = self.restaurant) => {
+fillRestaurantHTML = async (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
@@ -166,8 +165,20 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
+  const container = document.getElementById('reviews-container');
+  const title = document.createElement('h3');
+  title.innerHTML = 'Reviews';
+
+  container.appendChild(title)
 
   fillReviewsHTML();
+
+  // Get unsaved reviews from IndexedDB
+  const unsavedReviews = await DBHelper.getUnsavedReviews()
+  console.log(`unsaved reviews`, unsavedReviews)
+
+  fillReviewsHTML(unsavedReviews)
+
 }
 
 /**
@@ -195,9 +206,6 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (reviews = self.reviews) => {
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h3');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
 
   if (!reviews) {
     const noReviews = document.createElement('p');
@@ -282,13 +290,16 @@ window.addEventListener('online', function (e) {
   }, 2000)
 });
 
-function submitAllUnsavedReviews() {
+async function submitAllUnsavedReviews() {
   console.log(`uploading unsaved reviews`)
+
+  const unsavedReviews = await DBHelper.getUnsavedReviews()
+
   unsavedReviews.map(review => {
     fetch('http://localhost:1337/reviews/', {
       method: 'post',
       body: JSON.stringify(review)
     })
   })
-  unsavedReviews = []
+  DBHelper.clearUnsavedReviews()
 }

@@ -195,4 +195,16 @@ class DBHelper {
     }
 
   }
+
+  static clearUnsavedReviews () {
+    const DBOpenRequest = indexedDB.open("RestaurantsDB", 1)
+
+    DBOpenRequest.onsuccess = event => {
+
+      var db = event.target.result;
+      var objectStore = db.transaction(`unsavedReviews`, 'readwrite').objectStore(`unsavedReviews`)
+      objectStore.clear()
+    }
+
+  }
 }
