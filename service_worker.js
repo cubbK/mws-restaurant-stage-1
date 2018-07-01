@@ -126,6 +126,7 @@ async function useIndexedDb(store) {
       restaurantsRequest.onsuccess = function () {
         resolve(restaurantsRequest.result);
       }
+      db.close()
     }
   });
 

@@ -179,9 +179,9 @@ fillRestaurantHTML = async (restaurant = self.restaurant) => {
   fillReviewsHTML();
 
   // Get unsaved reviews from IndexedDB
-  // const unsavedReviews = await DBHelper.getUnsavedReviews()
+  const unsavedReviews = await DBHelper.getUnsavedReviews()
 
-  // fillReviewsHTML(unsavedReviews)
+   fillReviewsHTML(unsavedReviews)
 
 }
 

@@ -167,10 +167,21 @@ class DBHelper {
     return new Promise(resolve => {
       const DBOpenRequest = indexedDB.open("RestaurantsDB", 1)
 
-      DBOpenRequest.onsuccess = event => {
-
+      // ensure that objectstores are created
+      DBOpenRequest.onupgradeneeded = function (event) {
+        console.log(`on upgrade needed triggered`)
         var db = event.target.result;
-        var objectStore = db.transaction(`unsavedReviews`, 'readwrite').objectStore(`unsavedReviews`)
+        var objectStore = db.createObjectStore("restaurants", { keyPath: "id" });
+        db.createObjectStore("reviews", { keyPath: "id" });
+        db.createObjectStore("unsavedReviews", { keyPath: "unsavedId" } );
+      }
+
+      DBOpenRequest.onsuccess = event => {
+        
+        var db = event.target.result;
+        console.log(db.objectStoreNames)
+        var transaction = db.transaction(`unsavedReviews`, 'readwrite')
+        var objectStore = transaction.objectStore(`unsavedReviews`)
         var unsavedReviewsRequest = objectStore.getAll()
         unsavedReviewsRequest.onsuccess = function () {
           const unsavedReviews = unsavedReviewsRequest.result
