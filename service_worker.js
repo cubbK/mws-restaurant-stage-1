@@ -13,6 +13,7 @@ if ('serviceWorker' in navigator) {
       };
 
       request.onupgradeneeded = function (event) {
+        console.log(`on upgrade needed triggered`)
         db = event.target.result;
         var objectStore = db.createObjectStore("restaurants", { keyPath: "id" });
         db.createObjectStore("reviews", { keyPath: "id" });
@@ -41,7 +42,7 @@ self.addEventListener('fetch', async event => {
       //
       const responseData = await useIndexedDb('restaurants');
 
-      console.log(responseData)
+      
       if (responseData.length > 0) {
         return getIndexedDbResponse(responseData, 'restaurants')
       } else {
@@ -55,8 +56,15 @@ self.addEventListener('fetch', async event => {
 
     if (url.pathname === '/reviews' || url.pathname === '/reviews/') {
       const responseData = await useIndexedDb('reviews');
+      
+      console.log(responseData)
 
-      if (responseData.length > 0) {
+      const searchId = getSearchIdFromReviewFetch(url.search)
+      console.log(searchId)
+
+      const responseDataFilteredToId = responseData.filter(review => review.restaurant_id == searchId)
+
+      if (responseDataFilteredToId.length > 0) {
         return getIndexedDbResponse(responseData, 'reviews')
       } else {
         return putRestaurantsInIndexedDbAndReturnThem(event, 'reviews')
@@ -66,6 +74,14 @@ self.addEventListener('fetch', async event => {
 
   }());
 });
+
+function getSearchIdFromReviewFetch (search) {
+  console.log(search)
+
+  const idString = search.replace('?restaurant_id=', '')
+  const id = parseInt(idString)
+  return id
+}
 
 self.addEventListener('activate', event => {
 

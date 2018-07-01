@@ -31,9 +31,8 @@ class DBHelper {
   }
 
   static async fetchReviewsByRestaurantId(id) {
-    const allReviews = await DBHelper.fetchReviews()
-
-    const reviews = allReviews.filter(review => review.restaurant_id == id)
+    const reviewsRequest = await fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`)
+    const reviews = await reviewsRequest.json()
     return reviews
   }
 
