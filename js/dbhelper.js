@@ -33,7 +33,7 @@ class DBHelper {
   static async fetchReviewsByRestaurantId(id) {
     const allReviews = await DBHelper.fetchReviews()
 
-    const reviews = allReviews.filter(review => review.restaurant_id = id)
+    const reviews = allReviews.filter(review => review.restaurant_id == id)
     return reviews
   }
 
@@ -161,7 +161,6 @@ class DBHelper {
 
     const restaurant = restaurants.filter(restaurant => restaurant.id == restaurantId)[0]
 
-    console.log(restaurant, 'fav res')
     return restaurant.is_favorite == 'true'
   }
 
@@ -176,6 +175,7 @@ class DBHelper {
         var unsavedReviewsRequest = objectStore.getAll()
         unsavedReviewsRequest.onsuccess = function () {
           const unsavedReviews = unsavedReviewsRequest.result
+          
           resolve(unsavedReviews)
         }
       }

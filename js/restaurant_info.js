@@ -25,8 +25,6 @@ async function checkIfStarIsActive() {
   const isFav = await DBHelper.isRestaurantFav(restaurantId)
   const star = document.querySelector('.favorite-star')
 
-  console.log(isFav, typeof (isFav), 'is Fav in in check start if active')
-
   isFav ? star.classList.add('true') : star.classList.remove('true')
 }
 
@@ -35,8 +33,6 @@ async function toggleFav(event) {
   const restaurantId = getParameterByName('id')
   const isFavorite = await DBHelper.isRestaurantFav(restaurantId)
   const toFavorite = (!isFavorite).toString()
-
-  console.log('toFavorite', toFavorite)
 
   if (window.navigator.onLine) {
     DBHelper.updateFavoriteRestaurant(toFavorite, restaurantId)
@@ -70,12 +66,9 @@ async function submitReview() {
   } else {
     const unsavedReviews = await DBHelper.getUnsavedReviews()
     const unsavedReviewsLength = unsavedReviews.length
-    console.log(unsavedReviewsLength)
     DBHelper.addUnsavedReview({ ...reviewData, unsavedId: unsavedReviewsLength })
 
   }
-
-  console.log(await DBHelper.getUnsavedReviews(), 'unsavedReviews')
 }
 
 
@@ -105,7 +98,6 @@ function addReviewToHtml(review) {
 async function initMap () {
   const restaurant = await fetchRestaurantFromURL()
   const restaurantLatLngString = restaurant.latlng.lat.toString() + `,` + restaurant.latlng.lng.toString()
-  console.log(restaurantLatLngString)
 
   const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${restaurantLatLngString}&zoom=16&size=600x1000&scale=3&format=jpg&maptype=roadmap
   &markers=label:${restaurant.name}|${restaurantLatLngString}&key=AIzaSyBd-Cx0sWmoyl3PP7W_KyrKfT5NbSyBtaQ`
@@ -132,6 +124,7 @@ fetchRestaurantFromURL = async (callback) => {
   const restaurant = await DBHelper.fetchRestaurantById(id)
   const reviews = await DBHelper.fetchReviewsByRestaurantId(id)
 
+  console.log(reviews)
 
 
   self.restaurant = restaurant
@@ -187,7 +180,6 @@ fillRestaurantHTML = async (restaurant = self.restaurant) => {
 
   // Get unsaved reviews from IndexedDB
   const unsavedReviews = await DBHelper.getUnsavedReviews()
-  console.log(`unsaved reviews`, unsavedReviews)
 
   fillReviewsHTML(unsavedReviews)
 
@@ -226,7 +218,10 @@ fillReviewsHTML = (reviews = self.reviews) => {
     return;
   }
   const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
+  
+  const reviewsFiltered = reviews.filter(review => review.restaurant_id == self.restaurant.id)
+  
+  reviewsFiltered.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);

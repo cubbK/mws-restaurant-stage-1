@@ -86,7 +86,6 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
  */
 initMap = async () => {
   const restaurants = await DBHelper.fetchRestaurants()
-  console.log('map restaurants', restaurants)
 
   const getRestaurantCoord = restaurant => {
     return (
@@ -101,8 +100,6 @@ initMap = async () => {
     (accumulator, currentValue) => accumulator + '|' + currentValue, 
     ''
   )
-  console.log(restaurantsCoordString)
-  console.log(restaurantsCoord)
 
   let loc = {
     lat: 40.722216,
