@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 
   checkIfStarIsActive()
+  initMap()
 })
 
 async function checkIfStarIsActive() {
@@ -101,15 +102,26 @@ function addReviewToHtml(review) {
 /**
  * Initialize Google map, called from HTML.
  */
-window.initMap = async () => {
+async function initMap () {
   const restaurant = await fetchRestaurantFromURL()
-  self.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 16,
-    center: restaurant.latlng,
-    scrollwheel: false
-  });
+  const restaurantLatLngString = restaurant.latlng.lat.toString() + `,` + restaurant.latlng.lng.toString()
+  console.log(restaurantLatLngString)
+
+  const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${restaurantLatLngString}&zoom=16&size=600x1000&scale=3&format=jpg&maptype=roadmap
+  &markers=label:${restaurant.name}|${restaurantLatLngString}&key=AIzaSyBd-Cx0sWmoyl3PP7W_KyrKfT5NbSyBtaQ`
+
+  const mapContainer = document.getElementById('map')
+
+  const mapImg = document.createElement(`img`)
+  mapImg.classList.add('map-img')
+  mapImg.src = mapUrl
+  mapImg.alt = `Map for ${restaurant.name}`
+
+  mapContainer.appendChild(mapImg)
+  
+ 
   fillBreadcrumb();
-  DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+  // DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
 }
 
 /**

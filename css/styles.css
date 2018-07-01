@@ -418,3 +418,13 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
   display: flex;
   align-items: center;
 }
+
+.map-img {
+  height: 100%;
+  width: auto;
+}
+
+.map-img-home {
+  width: 100%;
+  height: auto;
+}
