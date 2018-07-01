@@ -3,6 +3,13 @@ var map;
 
 document.addEventListener("DOMContentLoaded", () => {
 
+  if (!window.navigator.onLine) {
+    const panel = document.querySelector(`.network-panel`)
+    panel.classList.add('offline')
+    panel.classList.remove('online')
+    panel.innerHTML = `Offline`
+  }
+
   DBHelper.fetchRestaurants()
 
   const reviewForm = document.querySelector("#reviewForm")
@@ -95,7 +102,7 @@ function addReviewToHtml(review) {
 /**
  * Initialize Google map, called from HTML.
  */
-async function initMap () {
+async function initMap() {
   const restaurant = await fetchRestaurantFromURL()
   const restaurantLatLngString = restaurant.latlng.lat.toString() + `,` + restaurant.latlng.lng.toString()
 
@@ -110,8 +117,8 @@ async function initMap () {
   mapImg.alt = `Map for ${restaurant.name}`
 
   mapContainer.appendChild(mapImg)
-  
- 
+
+
   fillBreadcrumb();
   // DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
 }
@@ -181,7 +188,7 @@ fillRestaurantHTML = async (restaurant = self.restaurant) => {
   // Get unsaved reviews from IndexedDB
   const unsavedReviews = await DBHelper.getUnsavedReviews()
 
-   fillReviewsHTML(unsavedReviews)
+  fillReviewsHTML(unsavedReviews)
 
 }
 
@@ -218,9 +225,9 @@ fillReviewsHTML = (reviews = self.reviews) => {
     return;
   }
   const ul = document.getElementById('reviews-list');
-  
+
   const reviewsFiltered = reviews.filter(review => review.restaurant_id == self.restaurant.id)
-  
+
   reviewsFiltered.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
