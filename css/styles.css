@@ -114,7 +114,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 }
 /* ====================== Map ====================== */
 #map {
-  height: 400px;
+  max-height: 400px;
   width: 100%;
   background-color: #ccc;
 }
